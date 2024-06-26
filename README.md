@@ -23,7 +23,6 @@ dos Líderes e dos obreiros+
 * Alfredo Luis Vieira
 * Bruno Evangelista Gomes de Azevedo
 * Vinicius Salles de Oliveira
-* Victor Rafael de Neiva Machado
 
 
 ## Professores responsáveis
