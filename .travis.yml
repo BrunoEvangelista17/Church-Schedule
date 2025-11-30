@@ -1,7 +1,6 @@
 language: node_js
 
 node_js:
-  - "18"
   - "20"
 
 # Desabilita o comando padrão de teste do Travis
@@ -29,7 +28,7 @@ jobs:
         - cat coverage/lcov.info 2>/dev/null || echo "Coverage report gerado"
 
     # Job para o cliente
-    - name: "Client - Lint and Build"
+    - name: "Client - Build"
       before_script:
         - cd Codigo/client
       script:
