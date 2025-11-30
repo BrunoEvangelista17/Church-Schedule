@@ -1,0 +1,54 @@
+language: node_js
+
+node_js:
+  - "20"
+
+# Desabilita o comando padrão de teste do Travis
+install: skip
+script: skip
+
+# Cache para acelerar builds
+cache:
+  directories:
+    - Codigo/client/node_modules
+    - Codigo/server/node_modules
+
+# Matriz de jobs para testar client e server
+jobs:
+  include:
+    # Job para o servidor - Testes com Jest
+    - name: "Server - Tests with Coverage"
+      before_script:
+        - cd Codigo/server
+      script:
+        - npm ci
+        - npm run test:ci
+      after_success:
+        - echo "Testes do servidor concluídos com sucesso!"
+        - cat coverage/lcov.info 2>/dev/null || echo "Coverage report gerado"
+
+    # Job para o cliente
+    - name: "Client - Build"
+      before_script:
+        - cd Codigo/client
+      script:
+        - npm install
+        - npm run build
+
+# Notificações
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+# Branches para executar CI
+branches:
+  only:
+    - main
+    - develop
+    - /^feature\/.*$/
+    - /^hotfix\/.*$/
+    - /^release\/.*$/
+
+# Executar apenas em commits e pull requests
+if: type IN (push, pull_request)
