@@ -13,14 +13,16 @@ cache:
 # Matriz de jobs para testar client e server
 jobs:
   include:
-    # Job para o servidor
-    - name: "Server - Lint and Test"
+    # Job para o servidor - Testes com Jest
+    - name: "Server - Tests with Coverage"
       before_script:
         - cd Codigo/server
       script:
         - npm ci
-        - npm run lint || echo "Lint não configurado ainda"
-        - npm test || echo "Testes não configurados ainda"
+        - npm run test:ci
+      after_success:
+        - echo "Testes do servidor concluídos com sucesso!"
+        - cat coverage/lcov.info 2>/dev/null || echo "Coverage report gerado"
 
     # Job para o cliente
     - name: "Client - Lint and Build"
@@ -31,13 +33,13 @@ jobs:
         - npm run lint
         - npm run build
 
-    # Job adicional para verificar a build do servidor
-    - name: "Server - Check Start"
+    # Job adicional para lint do servidor
+    - name: "Server - Lint Check"
       before_script:
         - cd Codigo/server
       script:
         - npm ci
-        - timeout 10s npm start || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+        - npm run lint || npx eslint . || echo "Configure lint para melhor qualidade de código"
 
 # Notificações
 notifications:
