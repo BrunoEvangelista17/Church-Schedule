@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: church-schedule-db
+    environment:
+      POSTGRES_USER: default
+      POSTGRES_PASSWORD: y10VZJiUpjhg
+      POSTGRES_DB: verceldb
+    ports:
+      - "5432:5432"
+    volumes:
+      # Volume para persistir dados do banco de dados
+      - postgres_data:/var/lib/postgresql/data
+      # Script de inicialização
+      - ./dataBase/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U default -d verceldb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - church-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  church-network:
+    driver: bridge
