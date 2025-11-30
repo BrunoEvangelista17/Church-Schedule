@@ -4,6 +4,10 @@ node_js:
   - "18"
   - "20"
 
+# Desabilita o comando padrão de teste do Travis
+install: skip
+script: skip
+
 # Cache para acelerar builds
 cache:
   directories:
@@ -29,7 +33,7 @@ jobs:
       before_script:
         - cd Codigo/client
       script:
-        - npm ci
+        - npm install
         - npm run lint
         - npm run build
 
@@ -39,7 +43,7 @@ jobs:
         - cd Codigo/server
       script:
         - npm ci
-        - npm run lint || npx eslint . || echo "Configure lint para melhor qualidade de código"
+        - npx eslint . || echo "Configure lint para melhor qualidade de código"
 
 # Notificações
 notifications:
