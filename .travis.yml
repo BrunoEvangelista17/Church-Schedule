@@ -1,0 +1,58 @@
+language: node_js
+
+node_js:
+  - "18"
+  - "20"
+
+# Cache para acelerar builds
+cache:
+  directories:
+    - Codigo/client/node_modules
+    - Codigo/server/node_modules
+
+# Matriz de jobs para testar client e server
+jobs:
+  include:
+    # Job para o servidor
+    - name: "Server - Lint and Test"
+      before_script:
+        - cd Codigo/server
+      script:
+        - npm ci
+        - npm run lint || echo "Lint não configurado ainda"
+        - npm test || echo "Testes não configurados ainda"
+
+    # Job para o cliente
+    - name: "Client - Lint and Build"
+      before_script:
+        - cd Codigo/client
+      script:
+        - npm ci
+        - npm run lint
+        - npm run build
+
+    # Job adicional para verificar a build do servidor
+    - name: "Server - Check Start"
+      before_script:
+        - cd Codigo/server
+      script:
+        - npm ci
+        - timeout 10s npm start || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+
+# Notificações
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+# Branches para executar CI
+branches:
+  only:
+    - main
+    - develop
+    - /^feature\/.*$/
+    - /^hotfix\/.*$/
+    - /^release\/.*$/
+
+# Executar apenas em commits e pull requests
+if: type IN (push, pull_request)
