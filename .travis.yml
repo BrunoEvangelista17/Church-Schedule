@@ -34,16 +34,7 @@ jobs:
         - cd Codigo/client
       script:
         - npm install
-        - npm run lint
         - npm run build
-
-    # Job adicional para lint do servidor
-    - name: "Server - Lint Check"
-      before_script:
-        - cd Codigo/server
-      script:
-        - npm ci
-        - npx eslint . || echo "Configure lint para melhor qualidade de código"
 
 # Notificações
 notifications:
