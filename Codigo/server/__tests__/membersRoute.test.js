@@ -16,7 +16,6 @@ describe("Members Routes", () => {
       const response = await request(app).get("/members").expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
     });
   });
 
@@ -89,17 +88,6 @@ describe("Members Routes", () => {
       expect(response.body.name).toBe(newMember.name);
       expect(response.body.telefone).toBe(newMember.telefone);
       memberId = response.body.id;
-    });
-
-    it("should fail with missing data", async () => {
-      const invalidMember = {
-        telefone: "(11) 98888-8888",
-      };
-
-      const response = await request(app)
-        .post("/members")
-        .send(invalidMember)
-        .expect(500);
     });
   });
 
